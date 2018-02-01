@@ -31,8 +31,7 @@ type Point struct {
 
 // Using these literals prevents the slices from escaping to the heap, saving
 // a few micros per call:
-var (
-)
+var ()
 
 // scratchBufPool helps reuse serialization scratch buffers.
 var scratchBufPool = &sync.Pool{
@@ -64,8 +63,10 @@ func (p *Point) AppendTag(key, value []byte) {
 }
 
 func (p *Point) AppendField(key []byte, value interface{}) {
-	p.FieldKeys = append(p.FieldKeys, key)
-	p.FieldValues = append(p.FieldValues, value)
+	if len(p.FieldKeys) == 0 {
+		p.FieldKeys = append(p.FieldKeys, key)
+		p.FieldValues = append(p.FieldValues, value)
+	}
 }
 
 // SerializeInfluxBulk writes Point data to the given writer, conforming to the

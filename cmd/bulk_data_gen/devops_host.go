@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"math/rand"
@@ -13,7 +14,6 @@ const (
 	MachineServiceChoices           = 20
 	MachineServiceVersionChoices    = 2
 )
-
 
 type Region struct {
 	Name        []byte
@@ -110,7 +110,7 @@ var (
 
 var (
 	// The duration of a log epoch.
-	EpochDuration = 10 * time.Second
+	EpochDuration = 1 * time.Second
 
 	// Tag fields common to all hosts:
 	MachineTagKeys = [][]byte{
@@ -126,9 +126,6 @@ var (
 		[]byte("service_environment"),
 	}
 )
-
-
-
 
 // Type Host models a machine being monitored by Telegraf.
 type Host struct {
@@ -192,7 +189,6 @@ func (h *Host) TickAll(d time.Duration) {
 		h.SimulatedMeasurements[i].Tick(d)
 	}
 }
-
 
 func randChoice(choices [][]byte) []byte {
 	idx := rand.Int63n(int64(len(choices)))
