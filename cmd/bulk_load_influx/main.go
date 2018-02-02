@@ -57,6 +57,8 @@ var (
 	reportUser         string
 	reportPassword     string
 	reportTagsCSV      string
+	benchmarkers       string
+	address       string
 )
 
 // Global vars
@@ -110,6 +112,8 @@ func init() {
 	flag.StringVar(&reportUser, "report-user", "", "User for host to send result metrics")
 	flag.StringVar(&reportPassword, "report-password", "", "User password for Host to send result metrics")
 	flag.StringVar(&reportTagsCSV, "report-tags", "", "Comma separated k:v tags to send  alongside result metrics")
+	flag.StringVar(&address, "address", "localhost:8888", "Address to expose benchmarker health and stats")
+	flag.StringVar(&benchmarkers, "benchmarkers", "localhost:8888", "Comma separated host:ports addresses of benchmarkers to coordinate")
 
 	flag.Parse()
 
@@ -245,6 +249,12 @@ func main() {
 			}
 		}()
 	}
+
+	b := &benchmarker{address: address, benchmarkers: benchmarkers}
+	go b.serve()
+	fmt.Printf("waiting for other benchmarkers to spin up...\n")
+	b.waitForBenchmarkers()
+	fmt.Printf("done\n")
 
 	start := time.Now()
 	itemsRead, bytesRead := scan(batchSize)
