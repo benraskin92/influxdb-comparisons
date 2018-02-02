@@ -49,7 +49,8 @@ type HTTPWriter struct {
 func NewHTTPWriter(c HTTPWriterConfig, consistency string) *HTTPWriter {
 	return &HTTPWriter{
 		client: fasthttp.Client{
-			Name: "bulk_load_influx",
+			Name:        "bulk_load_influx",
+			ReadTimeout: 1 * time.Minute,
 		},
 
 		c:   c,
